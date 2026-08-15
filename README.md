@@ -8,7 +8,7 @@ LLM integration layer for Go, extracted from the [Vivarcus](https://vivarcus.com
 |------|---------|
 | `model.go` | Model capability helpers (multimodal detection, DashScope/Qwen compatibility quirks) |
 | `message.go` | OpenAI-style message structures |
-| `resolve.go` | Connection resolution — PostgreSQL-backed config with env fallback (`OPENVEEVA_LLM_*`) |
+| `resolve.go` | Connection resolution — PostgreSQL-backed config with env fallback (`VIVARCUS_LLM_*`; legacy `OPENVEEVA_LLM_*` accepted) |
 | `client.go` | Streaming chat client |
 
 ## Usage
@@ -18,7 +18,5 @@ import "github.com/vivarcus/vivarcus-llm"
 ```
 
 ## License
-
-Apache License 2.0 — see [LICENSE](LICENSE).
 
 Apache License 2.0 — see [LICENSE](LICENSE).

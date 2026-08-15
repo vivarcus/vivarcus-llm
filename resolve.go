@@ -15,9 +15,14 @@ const (
 	// PlatformDefaultName is the Settings value for the deploy-time env connection.
 	PlatformDefaultName = "platform_default"
 
-	envBaseURL = "OPENVEEVA_LLM_BASE_URL"
-	envAPIKey  = "OPENVEEVA_LLM_API_KEY"
-	envModel   = "OPENVEEVA_LLM_MODEL"
+	envBaseURL = "VIVARCUS_LLM_BASE_URL"
+	envAPIKey  = "VIVARCUS_LLM_API_KEY"
+	envModel   = "VIVARCUS_LLM_MODEL"
+
+	// Legacy env names (pre-brand rename); still honored as fallback.
+	legacyEnvBaseURL = "OPENVEEVA_LLM_BASE_URL"
+	legacyEnvAPIKey  = "OPENVEEVA_LLM_API_KEY"
+	legacyEnvModel   = "OPENVEEVA_LLM_MODEL"
 )
 
 // Resolver loads LLM connection facts (env platform_default and optional vault rows).
@@ -59,10 +64,18 @@ func (r *Resolver) Resolve(ctx context.Context, vaultID uuid.UUID, name string) 
 	return conn, nil
 }
 
+// envOrLegacy returns key's value, falling back to the legacy env name.
+func envOrLegacy(key, legacyKey string) string {
+	if v := strings.TrimSpace(os.Getenv(key)); v != "" {
+		return v
+	}
+	return strings.TrimSpace(os.Getenv(legacyKey))
+}
+
 func platformDefaultFromEnv() (Connection, error) {
-	base := strings.TrimSpace(os.Getenv(envBaseURL))
-	key := strings.TrimSpace(os.Getenv(envAPIKey))
-	model := strings.TrimSpace(os.Getenv(envModel))
+	base := envOrLegacy(envBaseURL, legacyEnvBaseURL)
+	key := envOrLegacy(envAPIKey, legacyEnvAPIKey)
+	model := envOrLegacy(envModel, legacyEnvModel)
 	if base == "" || key == "" || model == "" {
 		return Connection{}, fmt.Errorf("platform_default LLM requires %s, %s, and %s", envBaseURL, envAPIKey, envModel)
 	}

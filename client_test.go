@@ -205,9 +205,9 @@ func TestChatCompletions_toolCalls(t *testing.T) {
 }
 
 func TestPlatformDefaultFromEnv(t *testing.T) {
-	t.Setenv("VIVARCUS_LLM_BASE_URL", "https://example.test/v1")
-	t.Setenv("VIVARCUS_LLM_API_KEY", "secret")
-	t.Setenv("VIVARCUS_LLM_MODEL", "model-a")
+	t.Setenv("OPENVEEVA_LLM_BASE_URL", "https://example.test/v1")
+	t.Setenv("OPENVEEVA_LLM_API_KEY", "secret")
+	t.Setenv("OPENVEEVA_LLM_MODEL", "model-a")
 
 	r := llm.NewResolver(nil)
 	conn, err := r.Resolve(context.Background(), uuid.Nil, llm.PlatformDefaultName)
@@ -215,21 +215,6 @@ func TestPlatformDefaultFromEnv(t *testing.T) {
 		t.Fatalf("Resolve: %v", err)
 	}
 	if conn.BaseURL != "https://example.test/v1" || conn.Model != "model-a" {
-		t.Errorf("conn = %+v", conn)
-	}
-}
-
-func TestPlatformDefaultFromEnvLegacyFallback(t *testing.T) {
-	t.Setenv("OPENVEEVA_LLM_BASE_URL", "https://legacy.test/v1")
-	t.Setenv("OPENVEEVA_LLM_API_KEY", "legacy-secret")
-	t.Setenv("OPENVEEVA_LLM_MODEL", "legacy-model")
-
-	r := llm.NewResolver(nil)
-	conn, err := r.Resolve(context.Background(), uuid.Nil, llm.PlatformDefaultName)
-	if err != nil {
-		t.Fatalf("Resolve: %v", err)
-	}
-	if conn.BaseURL != "https://legacy.test/v1" || conn.Model != "legacy-model" {
 		t.Errorf("conn = %+v", conn)
 	}
 }
